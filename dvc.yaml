@@ -1,0 +1,29 @@
+stages:
+  preprocess:
+    cmd: python src/data_load.py --config params.yaml
+    deps:
+      - src/data_load.py
+      - data/raw/
+    outs:
+      - data/processed/
+
+  train:
+    cmd: python src/train.py --config params.yaml
+    deps:
+      - src/train.py
+      - data/processed/
+    outs:
+      - models/
+    metrics:
+      - metrics.json
+    plots:
+      - plots/metrics.csv
+
+  evaluate:
+    cmd: python src/evaluate.py --config params.yaml
+    deps:
+      - src/evaluate.py
+      - models/
+      - data/processed/
+    outs:
+      - reports/
